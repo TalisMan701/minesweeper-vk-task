@@ -2,31 +2,26 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import classes from './Header.module.scss';
 import NumberDisplay from '../NumberDisplay/NumberDisplay';
 import SmileButton from '../SmileButton/SmileButton';
+import {useAppDispatch, useAppSelector} from '../../hooks/reduxHooks';
+import {restartGame} from '../../store/reducers/GameReducer/GameActionCreators';
 
-interface HeaderProps {
-    win: boolean,
-    death: boolean,
-    restartGame: () => void,
-    countSelectedMines: number,
-    countMines: number,
-    timeStart: Date | null
-}
-
-const Header: FC<HeaderProps> = ({win, death, restartGame, countSelectedMines, countMines, timeStart}) => {
+const Header: FC = () => {
+    const {firstClick, win, death} = useAppSelector(state => state.game);
+    const {countMines, countSelectedMines} = useAppSelector(state => state.field)
+    const dispatch = useAppDispatch();
     const [countSecondInGame, setCountSecondInGame] = useState<number>(0)
     const timer = useRef<number>()
     useEffect(()=>{
-        if(timeStart){
+        if(firstClick.timeStart){
             timer.current = setInterval(()=>{
-                const now = new Date();
-                setCountSecondInGame(Math.round((now.getTime() - timeStart.getTime())/1000))
+                setCountSecondInGame(Math.round((Date.now() - (firstClick.timeStart as number))/1000))
             },1000)
         }
         return () => {
             setCountSecondInGame(0)
             clearInterval(timer.current)
         }
-    }, [timeStart])
+    }, [firstClick.timeStart])
 
     useEffect(()=>{
         if(win || death) clearInterval(timer.current)
@@ -35,8 +30,8 @@ const Header: FC<HeaderProps> = ({win, death, restartGame, countSelectedMines, c
     return (
         <div className={classes.wrapper}>
             <NumberDisplay value={countMines-countSelectedMines >= 0 ? countMines-countSelectedMines: 0}/>
-            <SmileButton win={win} death={death} restartGame={restartGame}/>
-            <NumberDisplay value={timeStart ? countSecondInGame >= 0 ? countSecondInGame : 0 : 0}/>
+            <SmileButton win={win} death={death} restartGame={() => dispatch(restartGame())}/>
+            <NumberDisplay value={firstClick.timeStart ? countSecondInGame >= 0 ? countSecondInGame : 0 : 0}/>
         </div>
     );
 };
