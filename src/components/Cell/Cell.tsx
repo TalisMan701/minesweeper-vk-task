@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useMemo, useState} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import classes from './Cell.module.scss';
 import {mapMaskToImageName, Mask} from '../../types/mine';
 import {cellValue} from '../../types/cell';
@@ -31,6 +31,15 @@ const Cell: FC<CellProps> = ({value, maskValue, x, y}) => {
     useEffect(() => {
         console.log(active);
     });
+    useEffect(()=> {
+        const handleMouseUp = (): void => {
+            setActive(false);
+        };
+        window.addEventListener('mouseup', handleMouseUp);
+        return () => {
+            window.removeEventListener('mouseup', handleMouseUp)
+        }
+    },[])
     return (
         <div
             className={classes.cell}
@@ -50,13 +59,8 @@ const Cell: FC<CellProps> = ({value, maskValue, x, y}) => {
                 dispatch(clickContextCell(x, y, maskValue));
             }}
             onMouseDown={(e) => {
-                if (e.button === 0 && maskValue !== Mask.Transparent && !win && !death) {
+                if (e.button === 0 && maskValue === Mask.Fill && !win && !death) {
                     setActive(true);
-                }
-            }}
-            onMouseUp={(e) => {
-                if (e.button === 0 && maskValue !== Mask.Transparent && !win && !death) {
-                    setActive(false);
                 }
             }}
         >
