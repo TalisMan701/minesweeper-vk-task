@@ -4,11 +4,7 @@ import {mapMaskToImageName, Mask} from '../../types/mine';
 import {cellValue} from '../../types/cell';
 import {Mine} from '../../constants';
 import {useAppDispatch, useAppSelector} from '../../hooks/reduxHooks';
-import {
-    clickCell,
-    clickContextCell,
-    firstClickCell,
-} from '../../store/reducers/FieldReducer/FieldActionCreators';
+import {clickCell, clickContextCell, firstClickCell,} from '../../store/reducers/FieldReducer/FieldActionCreators';
 
 interface CellProps {
     value: cellValue;
@@ -54,12 +50,12 @@ const Cell: FC<CellProps> = ({value, maskValue, x, y}) => {
                 dispatch(clickContextCell(x, y, maskValue));
             }}
             onMouseDown={(e) => {
-                if (e.button === 0) {
+                if (e.button === 0 && maskValue !== Mask.Transparent && !win && !death) {
                     setActive(true);
                 }
             }}
             onMouseUp={(e) => {
-                if (e.button === 0) {
+                if (e.button === 0 && maskValue !== Mask.Transparent && !win && !death) {
                     setActive(false);
                 }
             }}
