@@ -1,32 +1,24 @@
-import React, {FC, useEffect, useMemo} from 'react';
+import React, {FC, useMemo} from 'react';
 import classes from './Field.module.scss';
-import {cellValue} from '../../types/cell';
-import {Mask} from '../../types/mine';
 import {generateUEID} from '../../utils/generateUEID';
 import {MemoizedCell} from '../Cell/Cell';
+import {useAppSelector} from '../../hooks/reduxHooks';
 
-interface IField {
-    cells: cellValue[];
-    mask: Mask[];
-    size: number;
-    onClickCell: (e: React.MouseEvent<HTMLDivElement>, _x: number, _y: number) => void;
-    onContextMenuCell: (e: React.MouseEvent<HTMLDivElement>, _x: number, _y: number) => void;
-}
-
-const Field: FC<IField> = ({cells, mask, size, onClickCell, onContextMenuCell}) => {
+const Field: FC = () => {
+    const {size, cells, mask} = useAppSelector(state => state.field)
     const dimension = useMemo(() => new Array(size).fill(null), [])
     return (
         <div className={classes.wrapper}>
             {dimension.map((_, y) => {
                 return (
-                    <div className={classes.row} key={generateUEID()}>
+                    <div className={classes.row} key={y}>
                         {dimension.map((_, x) => (
                             <MemoizedCell
-                                key={generateUEID()}
-                                onClick={(e)=>onClickCell(e, x, y)}
-                                onContextMenu={(e)=>onContextMenuCell(e, x, y)}
+                                key={`${y}${x}`}
                                 value={cells[y * size + x]}
-                                mask={mask[y * size + x]}
+                                maskValue={mask[y * size + x]}
+                                x={x}
+                                y={y}
                             />
                         ))}
                     </div>

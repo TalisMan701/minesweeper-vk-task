@@ -3,25 +3,42 @@ import classes from './Cell.module.scss';
 import {mapMaskToImageName, Mask} from '../../types/mine';
 import {cellValue} from '../../types/cell';
 import {Mine} from '../../constants';
+import {useAppDispatch, useAppSelector} from '../../hooks/reduxHooks';
+import {clickCell, clickContextCell, firstClickCell} from '../../store/reducers/FieldReducer/FieldActionCreators';
 
 interface CellProps {
     value: cellValue,
-    mask: Mask,
-    onClick: (e: React.MouseEvent<HTMLDivElement>) => void,
-    onContextMenu: (e: React.MouseEvent<HTMLDivElement>) => void
+    maskValue: Mask,
+    x: number,
+    y: number
 }
 
-const Cell: FC<CellProps> = ({value, mask, onClick, onContextMenu}) => {
+const Cell: FC<CellProps> = ({value, maskValue, x, y}) => {
+    const {win, death, firstClick} = useAppSelector(state => state.game);
+    const dispatch = useAppDispatch();
     const [active, setActive] = useState<boolean>(false)
-    const imageName = useMemo(() => mask !== Mask.Transparent ? mask === Mask.Fill && active ? '0' : mapMaskToImageName[mask] : value === Mine ? 'mine' : value,[mask, value, active])
+    const imageName = useMemo(() => maskValue !== Mask.Transparent ? maskValue === Mask.Fill && active ? '0' : mapMaskToImageName[maskValue] : value === Mine ? 'mine' : value,[maskValue, value, active])
     useEffect(()=>{
-        console.log('Update cell')
+        console.log(active)
     })
     return (
         <div
             className={classes.cell}
-            onClick={onClick}
-            onContextMenu={onContextMenu}
+            onClick={(e) => {
+                if (win || death) return;
+                if (!firstClick.state) {
+                    dispatch(firstClickCell(x, y))
+                } else {
+                    dispatch(clickCell(x, y, maskValue, value));
+                }
+            }}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (win || death) return;
+                if (!firstClick.state) return;
+                dispatch(clickContextCell(x, y, maskValue))
+            }}
             onMouseDown={(e)=>{
                 if(e.button === 0) {
                     setActive(true)
@@ -39,5 +56,5 @@ const Cell: FC<CellProps> = ({value, mask, onClick, onContextMenu}) => {
 };
 
 export const MemoizedCell =  React.memo(Cell, (prevProps, nextProps) => {
-    return prevProps.mask === nextProps.mask;
+    return prevProps.maskValue === nextProps.maskValue && prevProps.value === nextProps.value;
 });
