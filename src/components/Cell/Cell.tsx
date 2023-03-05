@@ -4,30 +4,44 @@ import {mapMaskToImageName, Mask} from '../../types/mine';
 import {cellValue} from '../../types/cell';
 import {Mine} from '../../constants';
 import {useAppDispatch, useAppSelector} from '../../hooks/reduxHooks';
-import {clickCell, clickContextCell, firstClickCell} from '../../store/reducers/FieldReducer/FieldActionCreators';
+import {
+    clickCell,
+    clickContextCell,
+    firstClickCell,
+} from '../../store/reducers/FieldReducer/FieldActionCreators';
 
 interface CellProps {
-    value: cellValue,
-    maskValue: Mask,
-    x: number,
-    y: number
+    value: cellValue;
+    maskValue: Mask;
+    x: number;
+    y: number;
 }
 
 const Cell: FC<CellProps> = ({value, maskValue, x, y}) => {
-    const {win, death, firstClick} = useAppSelector(state => state.game);
+    const {win, death, firstClick} = useAppSelector((state) => state.game);
     const dispatch = useAppDispatch();
-    const [active, setActive] = useState<boolean>(false)
-    const imageName = useMemo(() => maskValue !== Mask.Transparent ? maskValue === Mask.Fill && active ? '0' : mapMaskToImageName[maskValue] : value === Mine ? 'mine' : value,[maskValue, value, active])
-    useEffect(()=>{
-        console.log(active)
-    })
+    const [active, setActive] = useState<boolean>(false);
+    const imageName = useMemo(
+        () =>
+            maskValue !== Mask.Transparent
+                ? maskValue === Mask.Fill && active
+                    ? '0'
+                    : mapMaskToImageName[maskValue]
+                : value === Mine
+                ? 'mine'
+                : value,
+        [maskValue, value, active],
+    );
+    useEffect(() => {
+        console.log(active);
+    });
     return (
         <div
             className={classes.cell}
-            onClick={(e) => {
+            onClick={() => {
                 if (win || death) return;
                 if (!firstClick.state) {
-                    dispatch(firstClickCell(x, y))
+                    dispatch(firstClickCell(x, y));
                 } else {
                     dispatch(clickCell(x, y, maskValue, value));
                 }
@@ -37,24 +51,29 @@ const Cell: FC<CellProps> = ({value, maskValue, x, y}) => {
                 e.stopPropagation();
                 if (win || death) return;
                 if (!firstClick.state) return;
-                dispatch(clickContextCell(x, y, maskValue))
+                dispatch(clickContextCell(x, y, maskValue));
             }}
-            onMouseDown={(e)=>{
-                if(e.button === 0) {
-                    setActive(true)
+            onMouseDown={(e) => {
+                if (e.button === 0) {
+                    setActive(true);
                 }
             }}
-            onMouseUp={(e)=>{
-                if(e.button === 0) {
-                    setActive(false)
+            onMouseUp={(e) => {
+                if (e.button === 0) {
+                    setActive(false);
                 }
             }}
         >
-            <img draggable={false} className={classes.img} src={`./images/cell/${imageName}.gif`} alt="cell"/>
+            <img
+                draggable={false}
+                className={classes.img}
+                src={`./images/cell/${imageName}.gif`}
+                alt='cell'
+            />
         </div>
     );
 };
 
-export const MemoizedCell =  React.memo(Cell, (prevProps, nextProps) => {
+export const MemoizedCell = React.memo(Cell, (prevProps, nextProps) => {
     return prevProps.maskValue === nextProps.maskValue && prevProps.value === nextProps.value;
 });

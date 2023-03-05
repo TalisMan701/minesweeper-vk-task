@@ -10,35 +10,37 @@ import {fieldSlice} from '../../store/reducers/FieldReducer/FieldSlice';
 import {gameSlice} from '../../store/reducers/GameReducer/GameSlice';
 
 const Game = () => {
-    const {firstClick, win} = useAppSelector(state => state.game)
-    const {cells, mask} = useAppSelector(state => state.field)
-    const dispatch = useAppDispatch()
+    const {firstClick, win} = useAppSelector((state) => state.game);
+    const {cells, mask} = useAppSelector((state) => state.field);
+    const dispatch = useAppDispatch();
 
-    useEffect(()=>{
+    useEffect(() => {
         let tempWin: boolean;
-        if(firstClick.state){
-            tempWin = !cells.some(
-                (cellValue: cellValue, index) =>
-                    (cellValue === Mine && mask[index] !== Mask.Flag) || mask[index] === Mask.Fill,
-            ) && firstClick.state
-            if(win !== tempWin){
-                dispatch(gameSlice.actions.setWin(tempWin))
+        if (firstClick.state) {
+            tempWin =
+                !cells.some(
+                    (cellValue: cellValue, index) =>
+                        (cellValue === Mine && mask[index] !== Mask.Flag) ||
+                        mask[index] === Mask.Fill,
+                ) && firstClick.state;
+            if (win !== tempWin) {
+                dispatch(gameSlice.actions.setWin(tempWin));
             }
         }
-    }, [cells, mask])
+    }, [cells, mask]);
 
     useEffect(() => {
         if (firstClick.state && firstClick.cell) {
-            dispatch(fieldSlice.actions.clickNoMine({x: firstClick.cell.x, y: firstClick.cell.y}))
+            dispatch(fieldSlice.actions.clickNoMine({x: firstClick.cell.x, y: firstClick.cell.y}));
         }
     }, [firstClick.state]);
 
     return (
         <div className={classes.wrapper}>
-            <Header/>
-            <Field/>
+            <Header />
+            <Field />
         </div>
     );
-}
+};
 
 export default Game;

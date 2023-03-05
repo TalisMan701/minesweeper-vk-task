@@ -1,12 +1,10 @@
-import React from 'react';
-
 export enum Mask {
     Transparent,
     Fill,
     Flag,
     Question,
     MineActivated,
-    FailFlag
+    FailFlag,
 }
 
 export const mapMaskToImageName: Record<Mask, string> = {

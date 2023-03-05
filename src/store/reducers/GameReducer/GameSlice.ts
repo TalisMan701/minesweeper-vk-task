@@ -10,26 +10,26 @@ interface GameState {
 const initialState: GameState = {
     firstClick: {state: false, cell: null, timeStart: null},
     death: false,
-    win: false
-}
+    win: false,
+};
 
 export const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        setFirstClick(state, action: PayloadAction<IFirstClick>){
-            state.firstClick = action.payload
+        setFirstClick(state, action: PayloadAction<IFirstClick>) {
+            state.firstClick = action.payload;
         },
-        setDeath(state, action: PayloadAction<boolean>){
-            state.death = action.payload
+        setDeath(state, action: PayloadAction<boolean>) {
+            state.death = action.payload;
         },
-        setWin(state, action: PayloadAction<boolean>){
-            state.win = action.payload
+        setWin(state, action: PayloadAction<boolean>) {
+            state.win = action.payload;
         },
-        resetGame(){
-            return {...initialState}
-        }
-    }
-})
+        resetGame() {
+            return {...initialState};
+        },
+    },
+});
 
 export default gameSlice.reducer;

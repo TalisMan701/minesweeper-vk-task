@@ -1,12 +1,11 @@
 import React, {FC, useMemo} from 'react';
 import classes from './Field.module.scss';
-import {generateUEID} from '../../utils/generateUEID';
 import {MemoizedCell} from '../Cell/Cell';
 import {useAppSelector} from '../../hooks/reduxHooks';
 
 const Field: FC = () => {
-    const {size, cells, mask} = useAppSelector(state => state.field)
-    const dimension = useMemo(() => new Array(size).fill(null), [])
+    const {size, cells, mask} = useAppSelector((state) => state.field);
+    const dimension = useMemo(() => new Array(size).fill(null), []);
     return (
         <div className={classes.wrapper}>
             {dimension.map((_, y) => {
