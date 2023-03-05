@@ -17,44 +17,48 @@ const initialState: FieldState = {
     countMines: COUNT_MINES,
     cells: new Array(INITIAL_SIZE * INITIAL_SIZE).fill(0),
     mask: new Array(INITIAL_SIZE * INITIAL_SIZE).fill(Mask.Fill),
-    countSelectedMines: 0
-}
+    countSelectedMines: 0,
+};
 
 export const fieldSlice = createSlice({
     name: 'field',
     initialState,
     reducers: {
-        setSize(state, action: PayloadAction<number>){
-            state.size = action.payload
+        setSize(state, action: PayloadAction<number>) {
+            state.size = action.payload;
         },
-        setCountMines(state, action: PayloadAction<number>){
-            state.countMines = action.payload
+        setCountMines(state, action: PayloadAction<number>) {
+            state.countMines = action.payload;
         },
-        setCountSelectedMines(state, action: PayloadAction<number>){
-            state.countSelectedMines = action.payload
+        setCountSelectedMines(state, action: PayloadAction<number>) {
+            state.countSelectedMines = action.payload;
         },
-        incCountSelectedMines(state){
-            state.countSelectedMines = state.countSelectedMines + 1
+        incCountSelectedMines(state) {
+            state.countSelectedMines = state.countSelectedMines + 1;
         },
-        decCountSelectedMines(state){
-            state.countSelectedMines = state.countSelectedMines - 1
+        decCountSelectedMines(state) {
+            state.countSelectedMines = state.countSelectedMines - 1;
         },
-        setCells(state, action: PayloadAction<cellValue[]>){
-            state.cells = action.payload
+        setCells(state, action: PayloadAction<cellValue[]>) {
+            state.cells = action.payload;
         },
-        setMask(state, action: PayloadAction<Mask[]>){
-            state.mask = action.payload
+        setMask(state, action: PayloadAction<Mask[]>) {
+            state.mask = action.payload;
         },
-        clickMine(state, action: PayloadAction<{x: number, y: number}>){
-            state.cells.forEach((cellValue, index)=> {
-                if (cellValue === Mine && state.mask[index] !== Mask.Flag && index !== action.payload.y * state.size + action.payload.x)
+        clickMine(state, action: PayloadAction<{x: number; y: number}>) {
+            state.cells.forEach((cellValue, index) => {
+                if (
+                    cellValue === Mine &&
+                    state.mask[index] !== Mask.Flag &&
+                    index !== action.payload.y * state.size + action.payload.x
+                )
                     state.mask[index] = Mask.Transparent;
-                if(cellValue !== Mine && state.mask[index] === Mask.Flag)
-                    state.mask[index] = Mask.FailFlag
-            })
-            state.mask[action.payload.y * state.size + action.payload.x] = Mask.MineActivated
+                if (cellValue !== Mine && state.mask[index] === Mask.Flag)
+                    state.mask[index] = Mask.FailFlag;
+            });
+            state.mask[action.payload.y * state.size + action.payload.x] = Mask.MineActivated;
         },
-        clickNoMine(state, action: PayloadAction<{x: number, y: number}>){
+        clickNoMine(state, action: PayloadAction<{x: number; y: number}>) {
             const clearing: [number, number][] = [];
             function clear(x: number, y: number) {
                 if (x >= 0 && x < state.size && y >= 0 && y < state.size) {
@@ -63,7 +67,7 @@ export const fieldSlice = createSlice({
                 }
             }
             clear(action.payload.x, action.payload.y);
-            while (clearing.length){
+            while (clearing.length) {
                 const [x, y] = clearing.pop()!;
 
                 state.mask[y * state.size + x] = Mask.Transparent;
@@ -80,18 +84,23 @@ export const fieldSlice = createSlice({
                 clear(x - 1, y - 1);
             }
         },
-        updateMaskItem(state, action: PayloadAction<{x: number, y: number, maskValue: Mask}>){
+        updateMaskItem(state, action: PayloadAction<{x: number; y: number; maskValue: Mask}>) {
             state.mask[action.payload.y * state.size + action.payload.x] = action.payload.maskValue;
         },
-        resetField(state){
-            state.cells = initialState.cells
-            state.mask = initialState.mask
-            state.countSelectedMines = initialState.countSelectedMines
+        resetField(state) {
+            state.cells = initialState.cells;
+            state.mask = initialState.mask;
+            state.countSelectedMines = initialState.countSelectedMines;
         },
-        generateCells(state, action: PayloadAction<{x: number, y: number}>){
-            state.cells = generateCells(action.payload.x, action.payload.y, state.size, state.countMines)
-        }
-    }
-})
+        generateCells(state, action: PayloadAction<{x: number; y: number}>) {
+            state.cells = generateCells(
+                action.payload.x,
+                action.payload.y,
+                state.size,
+                state.countMines,
+            );
+        },
+    },
+});
 
 export default fieldSlice.reducer;

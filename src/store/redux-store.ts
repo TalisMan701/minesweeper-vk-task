@@ -4,7 +4,7 @@ import fieldReducer from './reducers/FieldReducer/FieldSlice';
 
 const rootReducer = combineReducers({
     game: gameReducer,
-    field: fieldReducer
+    field: fieldReducer,
 });
 
 export const setupStore = () => {

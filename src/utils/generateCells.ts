@@ -1,7 +1,12 @@
-import {COUNT_MINES, Mine} from '../constants';
+import {COUNT_MINES, INITIAL_SIZE, Mine} from '../constants';
 import {cellValue} from '../types/cell';
 
-export function generateCells(_x: number, _y: number, size: number, countMines: number): cellValue[] {
+export function generateCells(
+    _x: number,
+    _y: number,
+    size: number = INITIAL_SIZE,
+    countMines: number = COUNT_MINES,
+): cellValue[] {
     const cells: cellValue[] = new Array(size * size).fill(0);
 
     function inc(x: number, y: number) {
