@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {FC, useEffect, useMemo, useState} from 'react';
 import classes from './Cell.module.scss';
 import {mapMaskToImageName, Mask} from '../../types/mine';
 import {cellValue} from '../../types/cell';

@@ -1,5 +1,10 @@
 @import "../../styles/extendstyle";
 
+.container{
+  width: 100%;
+  @include flex(flex, column, flex-start, center);
+}
+
 .wrapper{
   display: inline-block;
   @include borders;

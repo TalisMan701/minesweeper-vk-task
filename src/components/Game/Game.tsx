@@ -36,9 +36,11 @@ const Game = () => {
     }, [firstClick.state]);
 
     return (
-        <div className={classes.wrapper}>
-            <Header />
-            <Field />
+        <div className={classes.container}>
+            <div className={classes.wrapper}>
+                <Header />
+                <Field />
+            </div>
         </div>
     );
 };
