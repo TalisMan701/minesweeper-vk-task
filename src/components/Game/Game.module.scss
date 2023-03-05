@@ -1,0 +1,8 @@
+@import "../../styles/extendstyle";
+
+.wrapper{
+  display: inline-block;
+  @include borders;
+  background-color: $backgroundGame;
+  padding: 16px;
+}

@@ -1,0 +1,8 @@
+@import "../../styles/extendstyle";
+
+.wrapper{
+  @include flex(flex, row nowrap, space-between, center);
+  padding: 8px;
+  margin-bottom: 16px;
+  @include borders($border-black, $border-white)
+}

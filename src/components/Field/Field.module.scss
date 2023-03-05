@@ -1,0 +1,9 @@
+@import "../../styles/extendstyle";
+
+.wrapper{
+  @include borders($border-black, $border-white);
+}
+
+.row{
+  @include flex(flex, row nowrap);
+}
